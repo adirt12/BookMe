@@ -22,9 +22,15 @@ const signUpForm = () => {
   const [dateOfBirth, setdateOfBirth] = useState(new Date());
   const [phoneNumber, setphoneNumber] = useState("");
   // const [phoneNumber,setphoneNumber]=useState("");
+
+  const [showDatePicker, setShowDatePicker] = useState(false);
   // const [date, setdateOfBirth] = useState(new Date());
   const onChange = (e, selectedDate) => {
-    setdateOfBirth(selectedDate);
+    // setdateOfBirth(selectedDate);
+    setShowDatePicker(false); // Close the picker on iOS
+    if (selectedDate) {
+      setdateOfBirth(selectedDate);
+    }
   };
 
   const handlePhoneNumberChange = (text) => {
@@ -32,7 +38,7 @@ const signUpForm = () => {
     const numericText = text.replace(/[^0-9]/g, '');
 
     // Format the phone number as XXX-XXX-XXXX
-    const formattedPhoneNumber = numericText.slice(0, 10).replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+    const formattedPhoneNumber = numericText.slice(0, 10).replace(/(\d{3})(\d{3})(\d{4})/, '$1$2$3');
 
     setphoneNumber(formattedPhoneNumber);
   };
@@ -108,13 +114,30 @@ const signUpForm = () => {
           <Text style={{ margin: 5 }}>Date Of Birth</Text>
           {/* <TextInput value={dateOfBirth} onChangeText={(text) => setdateOfBirth(text)}
           placeholder='Please enter Date Of Birth' style={{ width: '90%', height: 50, margin: 12, borderWidth: 2, borderRadius: 10, }} /> */}
-          <View style={{ alignItems: 'center' }}>
-            <DateTimePicker
-              value={dateOfBirth}
-              mode={"date"}
-              is24Hour={true}
-              onPress={onChange}
-            />
+          <View style={{ alignItems: 'center', flex: 1 }}>
+          {Platform.OS === 'android' &&(
+              <Pressable onPress={() => setShowDatePicker(true)} style={{ width: '50%', height: 50,  borderColor: 'black',borderWidth: 2,borderRadius:30,alignItems:'center',justifyContent:'center'}} >
+              <Text style={{fontSize:25}}>{dateOfBirth.toLocaleDateString()}</Text>
+              </Pressable>
+              )}
+                {Platform.OS === 'android' && showDatePicker && (
+                  <DateTimePicker
+                    value={dateOfBirth}
+                    mode={"date"}
+                    is24Hour={true}
+                    onChange={onChange}
+                  />
+                )}
+              
+          
+            {Platform.OS === 'ios'&&(
+                  <DateTimePicker
+                    value={dateOfBirth}
+                    mode={"date"}
+                    is24Hour={true}
+                    onChange={onChange}
+                  />
+                )}
           </View>
 
           <Text style={{ margin: 5 }}>Phone Number</Text>
