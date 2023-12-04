@@ -1,5 +1,5 @@
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View, KeyboardAvoidingView, StatusBar } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { TextInput } from 'react-native-gesture-handler';
@@ -7,6 +7,9 @@ import { useRouter } from "expo-router";
 import axios from "axios";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import PhoneInput from 'react-phone-input-2'
+import * as Network from 'expo-network';
+import Constants from 'expo-constants';
+
 // import 'react-phone-input-2/lib/style.css'
 
 const signUpForm = () => {
@@ -19,13 +22,23 @@ const signUpForm = () => {
   const [dateOfBirth, setdateOfBirth] = useState(new Date());
   const [phoneNumber, setphoneNumber] = useState("");
   // const [phoneNumber,setphoneNumber]=useState("");
-
   // const [date, setdateOfBirth] = useState(new Date());
   const onChange = (e, selectedDate) => {
     setdateOfBirth(selectedDate);
   };
 
+  const handlePhoneNumberChange = (text) => {
+    // Use a regex to match only numeric characters
+    const numericText = text.replace(/[^0-9]/g, '');
+
+    // Format the phone number as XXX-XXX-XXXX
+    const formattedPhoneNumber = numericText.slice(0, 10).replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+
+    setphoneNumber(formattedPhoneNumber);
+  };
+
   const handleReg = async () => {
+    const ipAddress = Constants.expoConfig.hostUri.split(':')[0];
     const userData = {
       email: email,
       userName: userName,
@@ -36,7 +49,7 @@ const signUpForm = () => {
       phoneNumber: phoneNumber
     }
     axios
-      .post("http://192.168.231.172:8000/addUser", userData)
+      .post("http://" + ipAddress + ":8000/addUser", userData)
       .then((response) => {
         Alert.alert(
           "Registration Successful",
@@ -100,13 +113,21 @@ const signUpForm = () => {
               value={dateOfBirth}
               mode={"date"}
               is24Hour={true}
-              onChange={onChange}
+              onPress={onChange}
             />
           </View>
 
           <Text style={{ margin: 5 }}>Phone Number</Text>
-          <TextInput value={phoneNumber} onChangeText={(text) => setphoneNumber(text)}
-            placeholder='Please enter Phone Number' style={{ width: '90%', height: 50, margin: 12, borderWidth: 2, borderRadius: 10, }} />
+          {/* <TextInput value={phoneNumber} onChangeText={(text) => setphoneNumber(text)}
+            placeholder='Please enter Phone Number' style={{ width: '90%', height: 50, margin: 12, borderWidth: 2, borderRadius: 10, }} /> */}
+          <TextInput
+            placeholder="Enter phone number"
+            value={phoneNumber}
+            onChangeText={handlePhoneNumberChange}
+            keyboardType="numeric"
+            maxLength={10} // Limit the input to 12 characters
+            style={{ width: '90%', height: 50, margin: 12, borderWidth: 2, borderRadius: 10, }}
+          />
         </View>
 
         <Pressable onPress={handleReg} style={{ flexDirection: 'row', padding: 10, margin: 20, backgroundColor: 'black', borderColor: 'white', borderRadius: 30, justifyContent: "center", alignItems: "center" }}>
