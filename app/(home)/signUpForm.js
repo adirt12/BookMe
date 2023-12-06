@@ -9,6 +9,9 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import PhoneInput from 'react-phone-input-2'
 import * as Network from 'expo-network';
 import Constants from 'expo-constants';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { FIREBASE_AUTH } from "../../firebaseConfig";
+
 
 
 
@@ -21,6 +24,22 @@ const signUpForm = () => {
   const [password, setpassword] = useState("");
   const [dateOfBirth, setdateOfBirth] = useState(new Date());
   const [phoneNumber, setphoneNumber] = useState("");
+  const [loading, setLoading] = useState('');
+  const auth = FIREBASE_AUTH;
+  const signUp = async () => {
+    setLoading(true);
+    try {
+      response = await createUserWithEmailAndPassword(auth, email,password);
+      console.log(response);
+  } catch(error) {
+    alert('sign up failed' + error.message);
+  }finally{
+    setLoading(false)
+}
+  }
+  
+  // const [phoneNumber,setphoneNumber]=useState("");
+
   const [showPassword, setShowPassword] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -90,8 +109,15 @@ const signUpForm = () => {
       });
   };
 
+
   const maximumDate = new Date();
   maximumDate.setHours(23, 59, 59, 999);
+
+  const onPressedCombined = () => {
+    signUp();
+    handleReg();
+  }
+
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
@@ -173,7 +199,7 @@ const signUpForm = () => {
           />
         </View>
 
-        <Pressable onPress={handleReg} style={{ flexDirection: 'row', padding: 10, margin: 20, backgroundColor: 'black', borderColor: 'white', borderRadius: 30, justifyContent: "center", alignItems: "center" }}>
+        <Pressable onPress={onPressedCombined}  style={{ flexDirection: 'row', padding: 10, margin: 20, backgroundColor: 'black', borderColor: 'white', borderRadius: 30, justifyContent: "center", alignItems: "center" }}>
           <MaterialIcons name="app-registration" size={24} color="white" />
           <Text style={{ color: "white", fontWeight: 'bold' }}>Sign Up</Text>
         </Pressable>
