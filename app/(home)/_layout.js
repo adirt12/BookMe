@@ -8,6 +8,7 @@ export default function Layout() {
       <Stack.Screen name="login" />
       <Stack.Screen name="homePage" />
       <Stack.Screen name="signUpForm" />
+      <Stack.Screen name="carMaint" />
     </Stack>
   );
 }

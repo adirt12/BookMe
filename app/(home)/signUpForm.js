@@ -72,6 +72,7 @@ const signUpForm = () => {
           "Registration Successful",
           "You have been registered successfully"
         );
+        router.push("/(home)/login");
         setEmail("");
         setuserName("");
         setdateOfBirth(new Date());
@@ -89,6 +90,8 @@ const signUpForm = () => {
       });
   };
 
+  const maximumDate = new Date();
+  maximumDate.setHours(23, 59, 59, 999);
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
@@ -154,6 +157,7 @@ const signUpForm = () => {
                 mode={"date"}
                 is24Hour={true}
                 onChange={onChange}
+                maximumDate={maximumDate}
               />
             )}
           </View>
