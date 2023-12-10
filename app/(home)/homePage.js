@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AntDesign, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+
 
 const HomePage = () => {
   const router = useRouter();
@@ -27,23 +28,27 @@ const HomePage = () => {
 
   const handleSignOut = () => {
     // Implement sign-out logic here
+    setDetailsVisible(false);
+    router.push("/(home)/login")
     console.log('Signing out...');
   };
 
   const handleSettings = () => {
     // Implement settings navigation or logic here
     console.log('Opening settings...');
+    alert('Feature in progress... :)')
   };
 
   const DetailsBar = ({ onClose, onSignOut, onSettings }) => (
+    
     <View style={styles.containerDet}>
-      <TouchableOpacity style={styles.button} onPress={onSignOut}>
+      <TouchableOpacity style={styles.closeButton} onPress={onSignOut}>
         <Text style={styles.buttonText}>Sign Out</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={onSettings}>
         <Text style={styles.buttonText}>Settings</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+      <TouchableOpacity style={styles.button} onPress={onClose}>
         <Text style={styles.buttonText}>Close</Text>
       </TouchableOpacity>
     </View>
@@ -62,7 +67,7 @@ const HomePage = () => {
       <View style={styles.mainContainer}>
         <View style={styles.detailsBar}>
           <TouchableOpacity
-            onPress={() => setDetailsVisible(true)}
+            onPress={() => setDetailsVisible(!detailsVisible)}
             style={styles.detailsButton}
           >
             <MaterialIcons name="menu" size={30} color="#007BFF" />
@@ -104,6 +109,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     elevation: 5,
     zIndex: 1,
+
   },
   detailsButton: {
     marginRight: 16,
@@ -136,7 +142,7 @@ const styles = StyleSheet.create({
   containerDet: {
     backgroundColor: 'white',
     padding: 16,
-    flexDirection: 'row',
+    flexDirection: 'row'  ,
     justifyContent: 'space-between',
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
@@ -160,6 +166,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     margin: 5,
   },
+  
+  
 });
 
 export default HomePage;

@@ -1,14 +1,13 @@
 import { StyleSheet, Text, View, ScrollView, Pressable, ActivityIndicator } from "react-native";
 import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { Feather, Entypo, Ionicons, Octicons, AntDesign } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { TextInput } from "react-native-gesture-handler";
-import axios from 'axios';
 import { FIREBASE_AUTH } from "../../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { Button } from "react-native-web";
+
 
 
 const login = () => {
@@ -17,24 +16,31 @@ const login = () => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState('');
     const auth = FIREBASE_AUTH;
+    const [showPassword, setShowPassword] = useState(false);
+
+    const toggleShowPassword = () => {
+        setShowPassword(!showPassword);
+      };
 
     const signIn = async () => {
         setLoading(true)
-        try{
-            const response = await signInWithEmailAndPassword(auth, email,password);
+        try {
+            const response = await signInWithEmailAndPassword(auth, email, password);
             console.log(response);
+            setPassword('')
+            setEmail('')
             router.push("/(home)/homePage")
-        } catch(error){
+        } catch (error) {
             console.log(error);
             alert('sign in failed:' + error.message);
-        } finally{
+        } finally {
             setLoading(false)
         }
-        };
-    
-    
+    };
+
+
     return (
-        <ScrollView > 
+        <ScrollView >
             <LinearGradient colors={["#09AFF7", "#E9E4F0"]} style={{ flex: 1 }}>
                 <View style={{ padding: 12 }}>
 
@@ -48,20 +54,34 @@ const login = () => {
                             lable="username"
                             placeholder="Please enter username"
                             onChangeText={(text) => setEmail(text)}
+                            
                         />
-                        <TextInput style={{ width: '80%', height: 50, margin: 12, borderWidth: 2, borderRadius: 10, }}
+                        <View style={{ width: '80%', height: 50, margin: 12, borderWidth: 2, borderRadius: 10,flexDirection:'row',alignItems:'center' }}>
+                        <TextInput 
                             mode="outlined"
                             lable="password"
                             placeholder="Please enter password"
                             onChangeText={(text) => setPassword(text)}
+                            secureTextEntry={!showPassword} style={{flex:1}}
+                            autoCapitalize='none'
+                            
                         />
+                        <MaterialCommunityIcons
+                            name={showPassword ? 'eye-off' : 'eye'}
+                            size={24}
+                            color="black"
+                            style={{paddingRight:15 }}
+                            onPress={toggleShowPassword}
+                        />
+                        </View>
                     </View>
 
                     <View style={{ alignItems: "center", marginBottom: "100%" }}>
-                        <Pressable title= "Login" onPress={() => signIn()} style={{ width: '60%', height: "20%", justifyContent: "center", alignItems: "center", margin: 10 }}>
+                        <Pressable title="Login" onPress={() => signIn()} style={{ width: '60%', height: "20%", justifyContent: "center", alignItems: "center", margin: 10 }}>
                             <View style={{ flexDirection: "row", width: "60%", height: 50, margin: 12, borderWidth: 5, borderRadius: 10, backgroundColor: "black" }}>
-                                <View style={{ alignItems: "center", justifyContent: "center" }}>
+                                <View style={{ alignItems: "center", justifyContent: "center", flexDirection: 'row' }}>
                                     <AntDesign name="login" size={24} color="black" style={{ color: "white" }} />
+                                    <Text style={{ color: 'white', fontSize: 18, paddingLeft: "15%" }}>Login</Text>
                                 </View>
                             </View>
                         </Pressable>
