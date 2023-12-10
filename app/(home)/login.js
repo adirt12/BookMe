@@ -1,13 +1,13 @@
 import { StyleSheet, Text, View, ScrollView, Pressable, ActivityIndicator } from "react-native";
 import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { TextInput } from "react-native-gesture-handler";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
-
 
 
 const login = () => {
