@@ -1,13 +1,10 @@
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View, KeyboardAvoidingView, StatusBar } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { TextInput } from 'react-native-gesture-handler';
 import { useRouter } from "expo-router";
 import axios from "axios";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import PhoneInput from 'react-phone-input-2'
-import * as Network from 'expo-network';
 import Constants from 'expo-constants';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { FIREBASE_AUTH } from "../../firebaseConfig";
@@ -26,6 +23,7 @@ const signUpForm = () => {
   const [phoneNumber, setphoneNumber] = useState("");
   const [loading, setLoading] = useState('');
   const auth = FIREBASE_AUTH;
+  
   const signUp = async () => {
     setLoading(true);
     try {

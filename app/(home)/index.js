@@ -3,17 +3,22 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient";
 import { Feather, Entypo, Ionicons, Octicons, AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useRouter ,useLocalSearchParams } from "expo-router";
 import { TextInput } from "react-native-gesture-handler";
 import axios from 'axios';
 
 const index = () => {
     const router = useRouter();
+    const params = useLocalSearchParams();
+    
     useEffect(() => {
         // Add any initialization logic or navigation logic here
         setTimeout(() => {
           // Navigate to the next screen after a delay
           router.push("/(home)/login"); // Assuming you have a 'Welcome' screen
+
+          // router.push({ pathname:'homePage', params:{ post: "ra123ndom" }});
+
         }, 2000); // Adjust the delay as needed
       }, []);
     

@@ -3,12 +3,13 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, Pressable } 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AntDesign, MaterialIcons, FontAwesome } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useRouter,useNavigation,useLocalSearchParams   } from 'expo-router';
 
 
 const HomePage = () => {
   const router = useRouter();
   const [detailsVisible, setDetailsVisible] = useState(false);
+  const {username}=useLocalSearchParams()
 
   const data = [
     { id: '1', title: 'Car Maintenance', icon: 'build', pageName: 'carMaint' },
@@ -72,7 +73,7 @@ const HomePage = () => {
           >
             <MaterialIcons name="menu" size={30} color="#007BFF" />
           </TouchableOpacity>
-          <Text style={styles.headerText}>Welcome to Your App</Text>
+          <Text style={styles.headerText}>Welcome, {username.replace(/"/g, '')}</Text>
         </View>
 
         <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
