@@ -1,13 +1,14 @@
 import { StyleSheet, Text, View, ScrollView, Pressable, ActivityIndicator } from "react-native";
 import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-
+import Constants from 'expo-constants';
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { TextInput } from "react-native-gesture-handler";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import axios from "axios";
 
 
 const login = () => {
@@ -17,23 +18,33 @@ const login = () => {
     const [loading, setLoading] = useState('');
     const auth = FIREBASE_AUTH;
     const [showPassword, setShowPassword] = useState(false);
+    const params = useLocalSearchParams();
 
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
-      };
+    };
 
     const signIn = async () => {
         setLoading(true)
+        const ipAddress = Constants.expoConfig.hostUri.split(':')[0];
         try {
-            const response = await signInWithEmailAndPassword(auth, email, password);
-            console.log(response);
-            setPassword('')
-            setEmail('')
-            router.push("/(home)/homePage")
+            const authRes=await signInWithEmailAndPassword(auth,email,password)
+            const apiUrl = 'http://' + ipAddress + ':8000/getUserByEmail'; // Replace with your server URL
+            const response = await axios.post(apiUrl, { 'email': email })
+                .then((response) => {
+                    setEmail('');
+                    setPassword('');
+                    router.push({ pathname: 'homePage', params: { username: JSON.stringify(response.data.userName) } });
+                })
+                .catch((error) => {
+                    console.log(error);
+                }).finally(() => {
+                    setLoading(false)
+                })
         } catch (error) {
-            console.log(error);
-            alert('sign in failed:' + error.message);
-        } finally {
+            console.log(error)
+            alert("Sign in failed: "+error.message)
+        }finally{
             setLoading(false)
         }
     };
@@ -52,27 +63,29 @@ const login = () => {
                         <TextInput style={{ width: '80%', height: 50, margin: 12, borderWidth: 2, borderRadius: 10, }}
                             mode="outlined"
                             lable="username"
+                            value={email}
                             placeholder="Please enter username"
                             onChangeText={(text) => setEmail(text)}
-                            
+
                         />
-                        <View style={{ width: '80%', height: 50, margin: 12, borderWidth: 2, borderRadius: 10,flexDirection:'row',alignItems:'center' }}>
-                        <TextInput 
-                            mode="outlined"
-                            lable="password"
-                            placeholder="Please enter password"
-                            onChangeText={(text) => setPassword(text)}
-                            secureTextEntry={!showPassword} style={{flex:1}}
-                            autoCapitalize='none'
-                            
-                        />
-                        <MaterialCommunityIcons
-                            name={showPassword ? 'eye-off' : 'eye'}
-                            size={24}
-                            color="black"
-                            style={{paddingRight:15 }}
-                            onPress={toggleShowPassword}
-                        />
+                        <View style={{ width: '80%', height: 50, margin: 12, borderWidth: 2, borderRadius: 10, flexDirection: 'row', alignItems: 'center' }}>
+                            <TextInput
+                                mode="outlined"
+                                lable="password"
+                                value={password}
+                                placeholder="Please enter password"
+                                onChangeText={(text) => setPassword(text)}
+                                secureTextEntry={!showPassword} style={{ flex: 1 }}
+                                autoCapitalize='none'
+
+                            />
+                            <MaterialCommunityIcons
+                                name={showPassword ? 'eye-off' : 'eye'}
+                                size={24}
+                                color="black"
+                                style={{ paddingRight: 15 }}
+                                onPress={toggleShowPassword}
+                            />
                         </View>
                     </View>
 
