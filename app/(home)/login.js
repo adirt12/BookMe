@@ -34,7 +34,7 @@ const login = () => {
                 .then((response) => {
                     setEmail('');
                     setPassword('');
-                    router.push({ pathname: 'homePage', params: { username: JSON.stringify(response.data.userName) } });
+                    router.push({ pathname: 'homePage', params: { username: JSON.stringify(response.data.userName),email:JSON.stringify(response.data.email) } });
                 })
                 .catch((error) => {
                     console.log(error);

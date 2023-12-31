@@ -1,10 +1,4 @@
 import { Stack } from "expo-router";
-import index from "./index";
-import users from "./users"
-import login from "./login"
-import HomePage from "./homePage";
-import signUpForm from "./signUpForm"
-import carMaint from "./carMaint"
 
 export default function Layout() {
   return (
@@ -15,6 +9,8 @@ export default function Layout() {
       <Stack.Screen name="homePage" />
       <Stack.Screen name="signUpForm" />
       <Stack.Screen name="carMaint" />
+      <Stack.Screen name="experimentsEmc"/>
+      <Stack.Screen name="bookingPage"/>
     </Stack>
   );
 }
