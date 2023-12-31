@@ -3,24 +3,25 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, Pressable } 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AntDesign, MaterialIcons, FontAwesome } from '@expo/vector-icons';
-import { useRouter,useNavigation,useLocalSearchParams   } from 'expo-router';
-
+import { useRouter, useNavigation, useLocalSearchParams } from 'expo-router';
 
 const HomePage = () => {
   const router = useRouter();
   const [detailsVisible, setDetailsVisible] = useState(false);
-  const {username}=useLocalSearchParams()
+  const { username } = useLocalSearchParams()
+  const { email } = useLocalSearchParams()
 
   const data = [
     { id: '1', title: 'Car Maintenance', icon: 'build', pageName: 'carMaint' },
-    { id: '2', title: 'Experience EMC', icon: 'flight-takeoff', pageName: 'carMaint' },
+    { id: '2', title: 'Experience EMC', icon: 'flight-takeoff', pageName: 'experimentsEmc' },
     { id: '3', title: 'Car Booking', icon: 'local-taxi', pageName: 'carMaint' },
   ];
+
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.itemContainer}
-      onPress={() => router.push("/(home)/" + item.pageName)}
+      onPress={() => router.push({ pathname: item.pageName , params: { username: username.replace(/"/g, ''), email: email.replace(/"/g, '') } })}
     >
       <MaterialIcons name={item.icon} size={40} color="#007BFF" />
       <Text style={styles.itemText}>{item.title}</Text>
@@ -41,7 +42,7 @@ const HomePage = () => {
   };
 
   const DetailsBar = ({ onClose, onSignOut, onSettings }) => (
-    
+
     <View style={styles.containerDet}>
       <TouchableOpacity style={styles.closeButton} onPress={onSignOut}>
         <Text style={styles.buttonText}>Sign Out</Text>
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
   containerDet: {
     backgroundColor: 'white',
     padding: 16,
-    flexDirection: 'row'  ,
+    flexDirection: 'row',
     justifyContent: 'space-between',
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
@@ -167,8 +168,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     margin: 5,
   },
-  
-  
+
+
 });
 
 export default HomePage;

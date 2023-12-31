@@ -52,8 +52,8 @@ app.post('/getUserByEmail', async (req, res) => {
   }
 });
 
-app.post('/addUser', async(req, res) => {
-  
+app.post('/addUser', async (req, res) => {
+
   connectToMongoDB();
 
   const db = client.db();
@@ -62,10 +62,92 @@ app.post('/addUser', async(req, res) => {
   console.log(newUser);
 
   const result = await collection.insertOne(newUser);
-  res.json({ message: 'User created successfully'});
+  res.json({ message: 'User created successfully' });
 
 });
 
+app.post('/addExType', async (req, res) => {
+
+  connectToMongoDB();
+  try {
+    const db = client.db();
+    const collection = db.collection('ExperimentsType');
+    // const newExType =new newEx({NameTypeEx}); // Assuming the request body contains the new user data
+    const newExType = req.body;
+    console.log(newExType.NameTypeEx);
+
+    // await collection.createIndex({Name:newExType.NameTypeEx})
+    const result = await collection.insertOne({Name:newExType.NameTypeEx});
+    res.json({ message: 'ExType created successfully' });
+  } catch (error) {
+    console.log("We have error");
+    res.json({ message: 'Error!!' });
+  }
+});
+
+app.get('/getExData', async (req, res) => {
+
+  await connectToMongoDB();
+
+  const db = client.db();
+  const collection = db.collection('ExperimentsType');
+
+  const exData = await collection.find().toArray();
+
+  try {
+    console.log(exData)
+    res.json(exData);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+
+})
+
+app.delete('/deleteItem', async (req, res) => {
+
+  connectToMongoDB();
+
+  const db = client.db();
+  const collection = db.collection('ExperimentsType');
+  console.log(`ExType inside is - ${req.body['Name']}`)
+  // console.log(req.body)
+  const Name = req.body['Name'];
+
+  const user = await collection.deleteOne({Name});
+  res.json(Name);
+});
+
+
+const Booking = require("./models/Booking");
+
+app.post('/addBooking',async(req,res)=>{
+
+  await connectToMongoDB();
+  try {
+    const { email, date, time, bookingType, bookingSubType, comment } = req.body;
+
+    // Create a new booking document
+    const newBooking = new Booking({
+      email,
+      date,
+      time,
+      bookingType,
+      bookingSubType,
+      comment,
+    });
+
+    // Save the booking document to the database
+    const savedBooking = await newBooking.save();
+
+    // Respond with success message and saved data
+    res.json({ message: 'Booking added successfully' });
+  } catch (error) {
+    // Handle errors and respond with an appropriate error message
+    console.error('Error adding booking:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
