@@ -41,7 +41,13 @@ const HomePage = () => {
     alert('Feature in progress... :)')
   };
 
-  const DetailsBar = ({ onClose, onSignOut, onSettings }) => (
+  const handleMyBooking = () => {
+    // Implement settings navigation or logic here
+    console.log('Opening hMyBooking...');
+    alert('Feature in progress... :)')
+  };
+
+  const DetailsBar = ({ onClose, onSignOut, onSettings, onMyBooking }) => (
 
     <View style={styles.containerDet}>
       <TouchableOpacity style={styles.closeButton} onPress={onSignOut}>
@@ -49,6 +55,9 @@ const HomePage = () => {
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={onSettings}>
         <Text style={styles.buttonText}>Settings</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={onMyBooking}>
+        <Text style={styles.buttonText}>My Bookings</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={onClose}>
         <Text style={styles.buttonText}>Close</Text>
@@ -63,6 +72,7 @@ const HomePage = () => {
           onClose={() => setDetailsVisible(false)}
           onSignOut={handleSignOut}
           onSettings={handleSettings}
+          onMyBooking = {handleMyBooking}
         />
       )}
 
@@ -151,22 +161,25 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    padding: 15,
+    padding: 2,
     backgroundColor: '#3498db',
     borderRadius: 8,
-    margin: 5,
+    margin: 2,
+    flexDirection: 'center',
+    alignItems: 'center',
   },
   buttonText: {
     color: 'white',
     textAlign: 'center',
     fontWeight: 'bold',
+    
   },
   closeButton: {
     flex: 1,
-    padding: 15,
+    padding: 2,
     backgroundColor: '#e74c3c',
     borderRadius: 8,
-    margin: 5,
+    margin: 2,
   },
 
 
