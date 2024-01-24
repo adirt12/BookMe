@@ -119,26 +119,15 @@ app.delete('/deleteItem', async (req, res) => {
 });
 
 
-const Booking = require("./models/Booking");
-
 app.post('/addBooking',async(req,res)=>{
 
   await connectToMongoDB();
   try {
-    const { email, date, time, bookingType, bookingSubType, comment } = req.body;
+    const newBooking=req.body;
 
-    // Create a new booking document
-    const newBooking = new Booking({
-      email,
-      date,
-      time,
-      bookingType,
-      bookingSubType,
-      comment,
-    });
-
-    // Save the booking document to the database
-    const savedBooking = await newBooking.save();
+    const db = client.db();
+    const collection = db.collection('Booking');
+    const user = await collection.insertOne(newBooking);
 
     // Respond with success message and saved data
     res.json({ message: 'Booking added successfully' });
@@ -148,6 +137,28 @@ app.post('/addBooking',async(req,res)=>{
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+app.post('/getBookingData',async(req,res)=>{
+  await connectToMongoDB();
+try{
+  const db = client.db();
+  const collection = db.collection('Booking');
+
+  const data=req.body['selectedDate'];
+
+  const timeData=await collection.find({date:data}).toArray()
+
+  
+  const taken_hours = timeData.map((book)=>{return book.time})
+
+
+
+  res.json({ message: taken_hours });
+}catch{
+  res.json({ message: 'Error!!' });
+}
+
+})
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

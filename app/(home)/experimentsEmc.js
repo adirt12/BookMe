@@ -18,6 +18,7 @@ const experimentsEmc = () => {
     const [presentButton,setPresentButton]=useState("")
     const { username } = useLocalSearchParams()
     const { email } = useLocalSearchParams()
+    const {title} = useLocalSearchParams()
 
     useEffect(() => {
         axios
@@ -65,7 +66,7 @@ const experimentsEmc = () => {
 
     const oneExType = ({ item }) => (
         <View style={{ flex: 1 }}>
-            <TouchableOpacity style={styles.itemContainer} onPress={() => router.push({ pathname: "bookingPage" , params: { username: username, email: email} })} onLongPress={() => hendelClick(item)} >
+            <TouchableOpacity style={styles.itemContainer} onPress={() => router.push({ pathname: "bookingPage" , params: { username: username, email: email,exName:item.Name , title:title} })} onLongPress={() => hendelClick(item)} >
                 <Text style={styles.itemText}>{item.Name}</Text>
                 <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'flex-end' }}>
                     <Image source={require('../../assets/emc.png')} style={{ width: 40, height: 40 }} />
