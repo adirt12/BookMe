@@ -21,7 +21,7 @@ const HomePage = () => {
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.itemContainer}
-      onPress={() => router.push({ pathname: item.pageName , params: { username: username.replace(/"/g, ''), email: email.replace(/"/g, '') } })}
+      onPress={() => router.push({ pathname: item.pageName , params: { username: username.replace(/"/g, ''), email: email.replace(/"/g, '') ,title:item.title} })}
     >
       <MaterialIcons name={item.icon} size={40} color="#007BFF" />
       <Text style={styles.itemText}>{item.title}</Text>

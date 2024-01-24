@@ -1,43 +1,4 @@
-// import { View, Text, Pressable } from 'react-native'
-// import React, { useState } from 'react'
-// import { useRouter, useLocalSearchParams } from 'expo-router';
-// import { Ionicons } from '@expo/vector-icons';
-// import { Calendar, CalendarList, LocaleConfig } from 'react-native-calendars';
-// import { FlatList } from 'react-native-gesture-handler';
-
-// const bookingPage = () => {
-//     const router = useRouter();
-//     const [selected, setSelected] = useState('');
-//     const { username } = useLocalSearchParams()
-//     const { email } = useLocalSearchParams()
-
-
-//     var day = new Date().getDate();
-//     var month = new Date().getMonth() + 1;
-//     var year = new Date().getFullYear();
-
-//     return (
-//         <View style={{ flex: 1 }}>
-//         <View>
-//             <Pressable onPress={() => router.push({ pathname: "experimentsEmc", params: { username: username, email: email } })}>
-//                 <Ionicons name="arrow-back-circle-sharp" size={50} color="black" />
-//             </Pressable>
-
-//             <Calendar onDayPress={(day) => setSelected(day.dateString)}
-//                 minDate={`${year}-${month}-${day}`}
-//                 markedDates={{
-//                     [selected]: { selected: true, marked: true, selectedColor: '#0EC4F5', dotColor: '#0E38F5' }
-//                 }}
-//                 enableSwipeMonths={true}
-//             />
-//             </View>
-//         </View>
-//     )
-// }
-
-// export default bookingPage
-
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable, ScrollView, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Calendar } from 'react-native-calendars';
@@ -49,37 +10,62 @@ const BookingPage = () => {
     const router = useRouter();
     const [selectedDate, setSelectedDate] = useState('');
     const [selectedHours, setSelectedHours] = useState([]);
-    const [availableHours, setAvailableHours] = useState(['09:00 AM', '10:00 AM', '01:00 PM', '03:00 PM', '05:00 PM']); // Replace with your available hours
+    const [availableHours, setAvailableHours] = useState(["05:00", "06:00", "09:00", "10:00", "15:00", "16:00"]); // Replace with your available hours ,"06:00","09:00","10:00","15:00","16:00"
     const { username } = useLocalSearchParams()
     const { email } = useLocalSearchParams()
-
+    const { exName } = useLocalSearchParams()
+    const { title } = useLocalSearchParams()
+    const [x, setX] = useState([])
+    const [taken_hours, settaken_hours] = useState([]);
+    const [mongoHoursData, setMongoHoursData] = useState([])
+    const ipAddress = Constants.expoConfig.hostUri.split(':')[0];
     var day = new Date().getDate();
     var month = new Date().getMonth() + 1;
     var year = new Date().getFullYear();
 
-    console.log(selectedHours)
-
-    const handelBooking = async()=>{
+    const handelBooking = async () => {
         const ipAddress = Constants.expoConfig.hostUri.split(':')[0];
-        const bookData ={
-            email:"adi@gmail.com",
-            date:"2023/12/12",
-            time:"10:00",
-            bookingType:"carMaint",
-            bookingSubType:"berlingo",
-            comment:"bla bla"
+        const bookData = {
+            email: email,
+            date: selectedDate,
+            time: selectedHours,
+            bookingType: title,
+            bookingSubType: exName,
+            comment: "bla bla"
         }
         axios.post("http://" + ipAddress + ":8000/addBooking", bookData).then((response) => {
-            console.log(response.data)
             alert(
-                response.data.message,
+                `${exName} at ${selectedDate} ${selectedHours} as booked successfuly `
             );
-    })}
-
-    const handleDayPress = (day) => {
+        })
+        // router.push({ pathname: "homePage" , params: {email: email} })
+    }
+    function filter_data(hours_that_taken) {
+        const hours = availableHours.filter((element) => !hours_that_taken.includes(element))
+        const nestedArray = [];
+        console.log(hours)
+        for (let i = 0; i < hours.length; i += 3) {
+            const subArray = hours.slice(i, i + 3);
+            nestedArray.push(subArray);
+        }
+        return nestedArray
+    }
+    const handleDayPress = async (day) => {
+        console.log("1")
         setSelectedDate(day.dateString);
-        setSelectedHours([]);
+        setX(filter_data(await getDataFromMongiDB(day.dateString)))
+        console.log("2")
     };
+
+    async function getDataFromMongiDB(myDay) {
+        const data = {
+            exName: exName,
+            selectedDate: myDay
+        }
+        const response = await axios.post("http://" + ipAddress + ":8000/getBookingData", data)
+        const res = response.data.message.flat()
+        return res
+    }
 
     const handleHourPress = (hour) => {
         if (selectedHours.includes(hour)) {
@@ -87,16 +73,19 @@ const BookingPage = () => {
         } else {
             setSelectedHours([...selectedHours, hour]);
         }
-        
+
     };
 
-    const rows = availableHours.reduce((result, item, index) => {
-        if (index % 3 === 0) {
-            result.push([]);
+    const getTimeArray = async () => {
+        const data = {
+            exName: exName,
+            selectedDate: selectedDate
         }
-        result[result.length - 1].push(item);
-        return result;
-    }, []);
+        const ipAddress = Constants.expoConfig.hostUri.split(':')[0];
+        await axios.post("http://" + ipAddress + ":8000/getBookingData", data).then((response) => {
+            return response.data.message;
+        });
+    }
 
     return (
         <View style={styles.container}>
@@ -116,7 +105,7 @@ const BookingPage = () => {
             {selectedDate && (
                 <ScrollView style={styles.hoursContainer}>
                     <Text style={styles.hoursTitle}>Available Hours for {selectedDate}</Text>
-                    {rows.map((row, rowIndex) => (
+                    {x.map((row, rowIndex) => (
                         <View key={rowIndex} style={styles.hourRow}>
                             {row.map((hour) => (
                                 <Pressable
@@ -130,8 +119,9 @@ const BookingPage = () => {
                         </View>
                     ))}
 
-                    <Pressable onPress={()=>handelBooking()} style={styles.hourText}>
-                        <Text>Book</Text>
+
+                    <Pressable onPress={() => handelBooking()} style={styles.bookButton}>
+                        <Text style={styles.bookText}>Book</Text>
                     </Pressable>
                 </ScrollView>
             )}
@@ -170,6 +160,21 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center',
     },
+    bookButton:{
+        flex:1,
+        padding:5,
+        marginLeft:"20%",
+        marginRight:"20%",
+        marginTop:"10%",
+        borderRadius:5,
+        backgroundColor:'#5DADE2',
+    },
+    bookText:{
+        fontSize:20,
+        color:'#283747',
+        margin:8,
+        alignSelf:'center'
+    }
 });
 
 export default BookingPage;

@@ -13,7 +13,7 @@ const bookingSchema = new mongoose.Schema({
     time: {
         type: String,
         required: true,
-        unique:true
+        // unique:true
     },
     bookingType: {
         type: String,
