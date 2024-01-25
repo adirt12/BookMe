@@ -145,8 +145,9 @@ try{
   const collection = db.collection('Booking');
 
   const data=req.body['selectedDate'];
+  const ex = req.body['exName'];
 
-  const timeData=await collection.find({date:data}).toArray()
+  const timeData=await collection.find({date:data,bookingSubType:ex}).toArray()
 
   
   const taken_hours = timeData.map((book)=>{return book.time})
