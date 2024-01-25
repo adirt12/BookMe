@@ -38,7 +38,7 @@ const BookingPage = () => {
                 `${exName} at ${selectedDate} ${selectedHours} as booked successfuly `
             );
         })
-        // router.push({ pathname: "homePage" , params: {email: email} })
+        setSelectedDate(day.dateString)
     }
     function filter_data(hours_that_taken) {
         const hours = availableHours.filter((element) => !hours_that_taken.includes(element))
@@ -51,10 +51,9 @@ const BookingPage = () => {
         return nestedArray
     }
     const handleDayPress = async (day) => {
-        console.log("1")
+        setSelectedHours([])
         setSelectedDate(day.dateString);
         setX(filter_data(await getDataFromMongiDB(day.dateString)))
-        console.log("2")
     };
 
     async function getDataFromMongiDB(myDay) {
@@ -76,16 +75,16 @@ const BookingPage = () => {
 
     };
 
-    const getTimeArray = async () => {
-        const data = {
-            exName: exName,
-            selectedDate: selectedDate
-        }
-        const ipAddress = Constants.expoConfig.hostUri.split(':')[0];
-        await axios.post("http://" + ipAddress + ":8000/getBookingData", data).then((response) => {
-            return response.data.message;
-        });
-    }
+    // const getTimeArray = async () => {
+    //     const data = {
+    //         exName: exName,
+    //         selectedDate: selectedDate
+    //     }
+    //     const ipAddress = Constants.expoConfig.hostUri.split(':')[0];
+    //     await axios.post("http://" + ipAddress + ":8000/getBookingData", data).then((response) => {
+    //         return response.data.message;
+    //     });
+    // }
 
     return (
         <View style={styles.container}>
