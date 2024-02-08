@@ -12,9 +12,9 @@ const HomePage = () => {
   const { email } = useLocalSearchParams()
 
   const data = [
-    { id: '1', title: 'Car Maintenance', icon: 'build', pageName: 'carMaint' },
+    { id: '1', title: 'Car Maintenance', icon: 'build', pageName: 'experimentsEmc' },
     { id: '2', title: 'Experience EMC', icon: 'flight-takeoff', pageName: 'experimentsEmc' },
-    { id: '3', title: 'Car Booking', icon: 'local-taxi', pageName: 'carMaint' },
+    { id: '3', title: 'Car Booking', icon: 'local-taxi', pageName: 'experimentsEmc' },
   ];
 
 

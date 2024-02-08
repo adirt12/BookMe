@@ -21,8 +21,11 @@ const experimentsEmc = () => {
     const {title} = useLocalSearchParams()
 
     useEffect(() => {
+        const collectionName = {
+            title:title,
+        }
         axios
-            .get("http://" + ipAddress + ":8000/getExData")
+            .post("http://" + ipAddress + ":8000/getExData",collectionName)
             .then((response) => {
                 setExArray(response.data)
             })
@@ -35,6 +38,7 @@ const experimentsEmc = () => {
         // setRefresh(refresh + 1)
         const ipAddress = Constants.expoConfig.hostUri.split(':')[0];
         const ExData = {
+            title:title,
             NameTypeEx: NameTypeEx
         }
         axios
@@ -66,7 +70,7 @@ const experimentsEmc = () => {
 
     const oneExType = ({ item }) => (
         <View style={{ flex: 1 }}>
-            <TouchableOpacity style={styles.itemContainer} onPress={() => router.push({ pathname: "bookingPage" , params: { username: username, email: email,exName:item.Name , title:title} })} onLongPress={() => hendelClick(item)} >
+            <TouchableOpacity style={styles.itemContainer} onPress={() => router.push({ pathname: "bookingPage" , params: { username: username, email: email,exName:item.Name , title:title,page:"experimentsEmc"} })} onLongPress={() => hendelClick(item)} >
                 <Text style={styles.itemText}>{item.Name}</Text>
                 <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'flex-end' }}>
                     <Image source={require('../../assets/emc.png')} style={{ width: 40, height: 40 }} />
@@ -173,22 +177,3 @@ const styles = StyleSheet.create({
     },
 })
 
-
-
-
-
-
-//   return (
-//     <View style={styles.container}>
-//       {Array.from({ length: buttonCount }, (_, index) => (
-//         <TouchableOpacity
-//           key={index}
-//           style={{ ...styles.button, backgroundColor: buttonColors[index] }}
-//           onPress={() => handleButtonPress(index)}
-//         >
-//           <Text style={styles.buttonText}>{`Button ${index + 1}`}</Text>
-//         </TouchableOpacity>
-//       ))}
-//     </View>
-//   );
-// };

@@ -15,6 +15,7 @@ const BookingPage = () => {
     const { email } = useLocalSearchParams()
     const { exName } = useLocalSearchParams()
     const { title } = useLocalSearchParams()
+    const {page} = useLocalSearchParams()
     const [x, setX] = useState([])
     const [taken_hours, settaken_hours] = useState([]);
     const [mongoHoursData, setMongoHoursData] = useState([])
@@ -75,20 +76,10 @@ const BookingPage = () => {
 
     };
 
-    // const getTimeArray = async () => {
-    //     const data = {
-    //         exName: exName,
-    //         selectedDate: selectedDate
-    //     }
-    //     const ipAddress = Constants.expoConfig.hostUri.split(':')[0];
-    //     await axios.post("http://" + ipAddress + ":8000/getBookingData", data).then((response) => {
-    //         return response.data.message;
-    //     });
-    // }
 
     return (
         <View style={styles.container}>
-            <Pressable onPress={() => router.push({ pathname: "experimentsEmc", params: { username: username, email: email } })}>
+            <Pressable onPress={() => router.push({ pathname: page, params: { username: username, email: email,page:page } })}>
                 <Ionicons name="arrow-back-circle-sharp" size={50} color="black" />
             </Pressable>
 

@@ -71,12 +71,10 @@ app.post('/addExType', async (req, res) => {
   connectToMongoDB();
   try {
     const db = client.db();
-    const collection = db.collection('ExperimentsType');
-    // const newExType =new newEx({NameTypeEx}); // Assuming the request body contains the new user data
     const newExType = req.body;
+    const collection = db.collection(newExType.title);
     console.log(newExType.NameTypeEx);
 
-    // await collection.createIndex({Name:newExType.NameTypeEx})
     const result = await collection.insertOne({Name:newExType.NameTypeEx});
     res.json({ message: 'ExType created successfully' });
   } catch (error) {
@@ -85,13 +83,13 @@ app.post('/addExType', async (req, res) => {
   }
 });
 
-app.get('/getExData', async (req, res) => {
+app.post('/getExData', async (req, res) => {
 
   await connectToMongoDB();
 
   const db = client.db();
-  const collection = db.collection('ExperimentsType');
-
+  const collectionName = req.body;
+  const collection = db.collection(collectionName.title);
   const exData = await collection.find().toArray();
 
   try {

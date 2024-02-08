@@ -29,7 +29,7 @@ const login = () => {
         const ipAddress = Constants.expoConfig.hostUri.split(':')[0];
         try {
             const authRes=await signInWithEmailAndPassword(auth,email,password)
-            const apiUrl = 'http://' + ipAddress + ':8000/getUserByEmail'; // Replace with your server URL
+            const apiUrl = 'http://' + ipAddress + ':8000/getUserByEmail';
             const response = await axios.post(apiUrl, { 'email': email })
                 .then((response) => {
                     setEmail('');
