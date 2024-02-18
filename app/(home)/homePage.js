@@ -14,7 +14,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { AntDesign, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import { useRouter, useNavigation, useLocalSearchParams } from "expo-router";
-// import { BlurView } from '@react-native-community/blur';
+// import { BlurView, VibrancyView } from "@react-native-community/blur";
 
 const HomePage = () => {
   const router = useRouter();
@@ -54,8 +54,7 @@ const HomePage = () => {
   const detailData = [
     { id: "1", title: "My Orders", icon: "menu-book", action: "" },
     { id: "2", title: "Setting", icon: "settings", action: "handleSettings" },
-    { id: "3", title: "Close Bar", icon: "close", action: "closingBar" },
-    { id: "4", title: "Sign Out", icon: "exit-to-app", action: "onSignOut" },
+    { id: "3", title: "Sign Out", icon: "exit-to-app", action: "onSignOut" },
   ];
 
   const renderItem = ({ item }) => (
@@ -120,7 +119,15 @@ const HomePage = () => {
       data={detailData}
       renderItem={DetailsRenderItem}
       keyExtractor={(item) => item.id}
-      style={styles.flatListMenu}
+      style={{
+        backgroundColor: "#74B2F3",
+        padding: 20,
+        borderRadius: 20,
+      }}
+      contentContainerStyle={{
+        justifyContent: "space-between",
+        paddingVertical: 10,
+      }}
     />
   );
   const [isNavbarVisible, setIsNavbarVisible] = useState(false);
@@ -133,7 +140,7 @@ const HomePage = () => {
       <View style={styles.detailsBar}>
         <TouchableOpacity
           onPress={() => setDetailsVisible(!detailsVisible)}
-          style={styles.detailsButton}
+          style={styles.menuButton}
         >
           <MaterialIcons name="menu" size={30} color="#007BFF" />
         </TouchableOpacity>
@@ -142,11 +149,24 @@ const HomePage = () => {
         </Text>
       </View>
 
-      {detailsVisible && (
-        <View style={styles.nabarStyle}>
-          <DetailsBar />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={detailsVisible}
+        onRequestClose={() => setDetailsVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <DetailsBar />
+          </View>
+          <TouchableOpacity
+            onPress={() => setDetailsVisible(false)}
+            style={styles.modalCloseButton}
+          >
+            <MaterialIcons name="close" size={50} color="#74B2F3" />
+          </TouchableOpacity>
         </View>
-      )}
+      </Modal>
 
       <View style={styles.viewImage}>
         <Image
@@ -154,6 +174,7 @@ const HomePage = () => {
           style={styles.image}
         />
       </View>
+
       <FlatList
         data={data}
         renderItem={renderItem}
@@ -169,18 +190,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f8f9fa",
   },
-  mainContainer: {
-    flex: 1,
-    zIndex: 0,
-  },
   detailsBar: {
     flexDirection: "row",
-    alignItems: "center",
     padding: 16,
     backgroundColor: "#fff",
-    elevation: 5,
   },
-  detailsButton: {
+  menuButton: {
     marginRight: 16,
   },
   headerText: {
@@ -209,32 +224,45 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   flatListMenu: {
-    flex: 1,
-    marginTop: 8,
     padding: 16,
-    position: "absolute",
-    backgroundColor: "red",
+    backgroundColor: "#74B2F3",
+    flexDirection: "row",
   },
   itemMenuContainer: {
     backgroundColor: "#fff",
     padding: 16,
-    marginBottom: 12,
+    marginBottom: 20,
     borderRadius: 15,
-    flexDirection: "row",
     alignItems: "center",
     borderColor: "black",
     borderWidth: 2,
   },
-
   viewImage: {
     flex: 2,
     justifyContent: "center",
     alignItems: "center",
     zIndex: 1,
   },
-  nabarStyle: {
+  modalContainer: {
     zIndex: 2,
-    backgroundColor: "red",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    padding: 20,
+    borderRadius: 10,
+    width: "80%",
+    maxHeight: "80%",
+  },
+  modalCloseButton: {
+    position: "absolute",
+    top: 50,
+    right: 20,
+    zIndex: 2,
   },
 });
 
