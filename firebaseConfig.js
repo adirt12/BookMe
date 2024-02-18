@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, initializeAuth,getReactNativePersistence } from "firebase/auth";
+import { getAuth, initializeAuth,getReactNativePersistence ,uid} from "firebase/auth";
 import {getFirestore} from "firebase/firestore";
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -22,9 +22,19 @@ const firebaseConfig = {
 // Initialize Firebase
 
 
+// getAuth()
+//   .getUser('Yrg3TsgndKW92LAvnyaGVL7jnfA3')
+//   .then((userRecord) => {
+//     // See the UserRecord reference doc for the contents of userRecord.
+//     console.log(`Successfully fetched user data: ${userRecord.toJSON()}`);
+//   })
+//   .catch((error) => {
+//     console.log('Error fetching user data:', error);
+//   });
+
+
 export const FIREBASE_APP = initializeApp(firebaseConfig);
 export const FIREBASE_AUTH = initializeAuth(FIREBASE_APP, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
 });
 export const FIRESTORE_DB = getFirestore(FIREBASE_APP);
-

@@ -6,7 +6,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
 import axios from "axios";
 
-const experimentsEmc = () => {
+const selectionPage = () => {
     const router = useRouter();
     const [NewTypeEx, setNewTypeEx] = useState(false)
     const [NameTypeEx, setNameTypeEx] = useState("")
@@ -19,8 +19,13 @@ const experimentsEmc = () => {
     const { username } = useLocalSearchParams()
     const { email } = useLocalSearchParams()
     const {title} = useLocalSearchParams()
+    const {admin} = useLocalSearchParams()
+    const [adminStatus,setAdminStatus] = useState(false)
 
     useEffect(() => {
+        if (admin === 'true'){
+            setAdminStatus(true)
+          }
         const collectionName = {
             title:title,
         }
@@ -61,7 +66,8 @@ const experimentsEmc = () => {
     const handelDelete=(item)=>{
         const data={
             _id: item._id,
-            Name: item.Name
+            Name: item.Name,
+            title : title
         }
         axios.delete("http://" + ipAddress + ":8000/deleteItem",{data}).then((response)=>{
             setRefresh(refresh + 1)
@@ -70,12 +76,12 @@ const experimentsEmc = () => {
 
     const oneExType = ({ item }) => (
         <View style={{ flex: 1 }}>
-            <TouchableOpacity style={styles.itemContainer} onPress={() => router.push({ pathname: "bookingPage" , params: { username: username, email: email,exName:item.Name , title:title,page:"experimentsEmc"} })} onLongPress={() => hendelClick(item)} >
+            <TouchableOpacity style={styles.itemContainer} onPress={() => router.push({ pathname: "bookingPage" , params: { username: username, email: email,exName:item.Name , title:title,page:"selectionPage"} })} onLongPress={() => hendelClick(item)} >
                 <Text style={styles.itemText}>{item.Name}</Text>
                 <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'flex-end' }}>
                     <Image source={require('../../assets/emc.png')} style={{ width: 40, height: 40 }} />
                 </View>
-                {presentButton===item.Name && ButtonSetting && (
+                {presentButton===item.Name && ButtonSetting && adminStatus &&(
                     <View >
                         <View style={{padding:5}}>   
                             <Pressable style={{ borderRadius: 7, backgroundColor: 'red', padding: 5 }} onPress={()=>handelDelete(item)}>
@@ -83,7 +89,7 @@ const experimentsEmc = () => {
                             </Pressable>
                         </View>
                         <View style={{padding:5}}>
-                            <Pressable style={{ borderRadius: 7, backgroundColor: 'gray', padding: 5 }} onPress={() => alert("setting feture in progress...")}>
+                            <Pressable style={{ borderRadius: 7, backgroundColor: 'gray', padding: 5 }} onPress={() => alert(admin)}>
                                 <Text style={{ fontSize: 20 }}>setting</Text>
                             </Pressable>
                         </View>
@@ -108,10 +114,10 @@ const experimentsEmc = () => {
                 </View>
             )}
 
-            {ExArray.length === 0 && (
+            {ExArray.length === 0 && admin &&(
                 <View style={{ flex: 1 }}>
                     <View style={{ flexDirection: "row", justifyContent: 'space-between', padding: 5 }}>
-                        <Pressable onPress={() => router.push("/(home)/homePage")}>
+                        <Pressable onPress={() => router.push({ pathname: "homePage" , params: { username: username, email: email , title:title,page:"selectionPage"} })}>
                             <Ionicons name="arrow-back-circle-sharp" size={50} color="black" />
                         </Pressable>
                         <Pressable onPress={() => setRefresh(refresh + 1)}>
@@ -130,15 +136,17 @@ const experimentsEmc = () => {
             {ExArray.length > 0 && (
                 <View style={{ flex: 1 }}>
                     <View style={{ flexDirection: "row", justifyContent: 'space-between', padding: 5 }}>
-                        <Pressable onPress={() => router.back()}>
+                        <Pressable onPress={() => router.push({ pathname: "homePage" , params: { username: username, email: email , title:title,page:"selectionPage"} })}>
                             <Ionicons name="arrow-back-circle-sharp" size={50} color="black" />
                         </Pressable>
+                        {adminStatus && (
                         <View style={{ flexDirection: 'column' }}>
                             <Pressable onPress={() => setNewTypeEx(!NewTypeEx)} style={{ alignSelf: 'center' }}>
                                 <AntDesign name="pluscircle" size={30} color="black" />
                             </Pressable>
                             <Text style={{ paddingTop: 10, paddingLeft: 5 }}>Add new experiments EMC type</Text>
                         </View>
+                        )}
                         <Pressable onPress={() => setRefresh(refresh + 1)}>
                             <Ionicons name="refresh-circle" size={50} color="black" />
                         </Pressable>
@@ -156,7 +164,7 @@ const experimentsEmc = () => {
 }
 
 
-export default experimentsEmc
+export default selectionPage
 
 const styles = StyleSheet.create({
     itemContainer: {

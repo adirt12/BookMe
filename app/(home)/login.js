@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, Pressable, ActivityIndicator } from "react-native";
+import { StyleSheet, Text, View, ScrollView, Pressable, ActivityIndicator,Dimensions,Image } from "react-native";
 import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import Constants from 'expo-constants';
@@ -20,6 +20,9 @@ const login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const params = useLocalSearchParams();
 
+    const screenWidth = Dimensions.get('window').width;
+    const screenHeight = Dimensions.get('window').height;
+
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
     };
@@ -28,13 +31,13 @@ const login = () => {
         setLoading(true)
         const ipAddress = Constants.expoConfig.hostUri.split(':')[0];
         try {
-            const authRes=await signInWithEmailAndPassword(auth,email,password)
+            const authRes = await signInWithEmailAndPassword(auth, email, password)
             const apiUrl = 'http://' + ipAddress + ':8000/getUserByEmail';
             const response = await axios.post(apiUrl, { 'email': email })
                 .then((response) => {
                     setEmail('');
                     setPassword('');
-                    router.push({ pathname: 'homePage', params: { username: JSON.stringify(response.data.userName),email:JSON.stringify(response.data.email) } });
+                    router.push({ pathname: 'homePage', params: { username: JSON.stringify(response.data.userName), email: JSON.stringify(response.data.email), admin: JSON.stringify(response.data.admin) } });
                 })
                 .catch((error) => {
                     console.log(error);
@@ -43,8 +46,8 @@ const login = () => {
                 })
         } catch (error) {
             console.log(error)
-            alert("Sign in failed: "+error.message)
-        }finally{
+            alert("Sign in failed: " + error.message)
+        } finally {
             setLoading(false)
         }
     };
@@ -87,8 +90,16 @@ const login = () => {
                                 onPress={toggleShowPassword}
                             />
                         </View>
-                    </View>
+                        <View style={{ flex: 1 }} >
+                            {loading &&
+                                <Image
+                                    style={{ width: screenWidth, height: 100 }}
+                                    source={require('../../assets/output-onlinegiftools.gif')}
 
+                                />
+                        }
+                        </View>
+                    </View>
                     <View style={{ alignItems: "center", marginBottom: "100%" }}>
                         <Pressable title="Login" onPress={() => signIn()} style={{ width: '60%', height: "20%", justifyContent: "center", alignItems: "center", margin: 10 }}>
                             <View style={{ flexDirection: "row", width: "60%", height: 50, margin: 12, borderWidth: 5, borderRadius: 10, backgroundColor: "black" }}>
