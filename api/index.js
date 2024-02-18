@@ -3,6 +3,7 @@ const cors = require('cors');
 const app = express();
 const port = 8000;
 
+const bcrypt = require('bcrypt');
 
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -15,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 
 const uri = "mongodb+srv://adi:adi@cluster0.sazivq4.mongodb.net/BookMeDB";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -107,9 +108,8 @@ app.delete('/deleteItem', async (req, res) => {
   connectToMongoDB();
 
   const db = client.db();
-  const collection = db.collection('ExperimentsType');
+  const collection = db.collection(`${req.body['title']}`);
   console.log(`ExType inside is - ${req.body['Name']}`)
-  // console.log(req.body)
   const Name = req.body['Name'];
 
   const user = await collection.deleteOne({Name});
