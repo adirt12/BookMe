@@ -113,6 +113,9 @@ const login = () => {
                         <Pressable onPress={() => router.push("/(home)/signUpForm")}>
                             <Text style={{ fontSize: 20 }}>Create an account</Text>
                         </Pressable>
+                        <Pressable onPress={() => router.push("/(home)/changePassword")}>
+                            <Text style={{ fontSize: 20 }}>Forgot my password</Text>
+                        </Pressable>
                     </View>
 
                 </View>

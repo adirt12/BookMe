@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { AntDesign, MaterialIcons, FontAwesome } from "@expo/vector-icons";
+import { AntDesign, MaterialIcons, MaterialCommunityIcons  } from "@expo/vector-icons";
 import { useRouter, useNavigation, useLocalSearchParams } from "expo-router";
 // import { BlurView, VibrancyView } from "@react-native-community/blur";
 
@@ -52,9 +52,10 @@ const HomePage = () => {
   ];
 
   const detailData = [
-    { id: "1", title: "My Orders", icon: "menu-book", action: "" },
-    { id: "2", title: "Setting", icon: "settings", action: "handleSettings" },
-    { id: "3", title: "Sign Out", icon: "exit-to-app", action: "onSignOut" },
+    { id: "1", title: "My Orders", icon: "menu-book", action: "" ,iconLib:"MaterialIcons"},
+    { id: "2", title: "Setting", icon: "settings", action: "handleSettings" ,iconLib:"MaterialIcons"},
+    { id: "3", title: "Change password", icon: "exit-to-app", action: "handleChangePassword" ,iconLib:"MaterialCommunityIcons"},
+    { id: "4", title: "Sign Out", icon: "exit-to-app", action: "onSignOut" ,iconLib:"MaterialIcons"},
   ];
 
   const renderItem = ({ item }) => (
@@ -90,15 +91,16 @@ const HomePage = () => {
     alert("Feature in progress... :)");
   };
 
-  const handleClosingBar = () => {
+  const handleChangePassword = () => {
     setDetailsVisible(false);
+    router.push('/(home)/changePassword')
   };
 
   const DetailsBarAction = (actionName) => {
     if (actionName === "onSignOut") {
       handleSignOut();
-    } else if (actionName === "closingBar") {
-      handleClosingBar();
+    } else if (actionName === "handleChangePassword") {
+      handleChangePassword();
     } else if (actionName === "handleSettings") {
       handleSettings();
     }
