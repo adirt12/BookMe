@@ -7,7 +7,7 @@ const ResetPasswordScreen = () => {
   
   const [email, setEmail] = useState('');
   const [resetStatus, setResetStatus] = useState('');
-
+  const router = useRouter();
   const handleResetPassword = () => {
     const auth = getAuth();
     
