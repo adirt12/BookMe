@@ -11,6 +11,7 @@ export default function Layout() {
       <Stack.Screen name="selectionPage" />
       <Stack.Screen name="bookingPage" />
       <Stack.Screen name="myOrders" />
+      <Stack.Screen name="changePassword"/>
     </Stack>
   );
 }

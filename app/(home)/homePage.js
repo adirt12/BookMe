@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+
 import {
   AntDesign,
   MaterialIcons,
@@ -75,7 +76,7 @@ const HomePage = () => {
       id: "3",
       title: "Change password",
       icon: "form-textbox-password",
-      action: "onSignOut",
+      action: "handleChangePassword",
       iconLib: "MaterialCommunityIcons",
     },
     {
@@ -130,6 +131,11 @@ const HomePage = () => {
         admin: adminStatus,
       },
     });
+
+  const handleChangePassword = () => {
+    setDetailsVisible(false);
+    router.push('/(home)/changePassword')
+
   };
 
   const DetailsBarAction = (actionName) => {
@@ -137,6 +143,8 @@ const HomePage = () => {
       handleSignOut();
     } else if (actionName === "handleMyOrder") {
       handleMyOrder();
+    } else if (actionName === "handleChangePassword") {
+      handleChangePassword();
     } else if (actionName === "handleSettings") {
       handleSettings();
     }
