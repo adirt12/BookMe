@@ -131,6 +131,7 @@ const HomePage = () => {
         admin: adminStatus,
       },
     });
+  };
 
   const handleChangePassword = () => {
     setDetailsVisible(false);
@@ -316,5 +317,6 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
 });
+
 
 export default HomePage;
