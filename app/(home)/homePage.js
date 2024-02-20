@@ -7,13 +7,17 @@ import {
   StyleSheet,
   Image,
   Modal,
-  SafeAreaViewBase,
-  SafeAreaView,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { AntDesign, MaterialIcons, FontAwesome } from "@expo/vector-icons";
+import {
+  AntDesign,
+  MaterialIcons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import { useRouter, useNavigation, useLocalSearchParams } from "expo-router";
+import axios from "axios";
+import Constants from "expo-constants";
 // import { BlurView, VibrancyView } from "@react-native-community/blur";
 
 const HomePage = () => {
@@ -23,6 +27,7 @@ const HomePage = () => {
   const { email } = useLocalSearchParams();
   const { admin } = useLocalSearchParams();
   const [adminStatus, setAdminStatus] = useState(false);
+  const ipAddress = Constants.expoConfig.hostUri.split(":")[0];
 
   useEffect(() => {
     if (admin === "true") {
@@ -52,9 +57,34 @@ const HomePage = () => {
   ];
 
   const detailData = [
-    { id: "1", title: "My Orders", icon: "menu-book", action: "" },
-    { id: "2", title: "Setting", icon: "settings", action: "handleSettings" },
-    { id: "3", title: "Sign Out", icon: "exit-to-app", action: "onSignOut" },
+    {
+      id: "1",
+      title: "My Orders",
+      icon: "menu-book",
+      action: "handleMyOrder",
+      iconLib: "MaterialIcons",
+    },
+    {
+      id: "2",
+      title: "Setting",
+      icon: "settings",
+      action: "handleSettings",
+      iconLib: "MaterialIcons",
+    },
+    {
+      id: "3",
+      title: "Change password",
+      icon: "form-textbox-password",
+      action: "onSignOut",
+      iconLib: "MaterialCommunityIcons",
+    },
+    {
+      id: "4",
+      title: "Sign Out",
+      icon: "exit-to-app",
+      action: "onSignOut",
+      iconLib: "MaterialIcons",
+    },
   ];
 
   const renderItem = ({ item }) => (
@@ -90,15 +120,23 @@ const HomePage = () => {
     alert("Feature in progress... :)");
   };
 
-  const handleClosingBar = () => {
-    setDetailsVisible(false);
+  const handleMyOrder = async () => {
+    console.log("Entering my order");
+    router.push({
+      pathname: "myOrders",
+      params: {
+        username: username.replace(/"/g, ""),
+        email: email.replace(/"/g, ""),
+        admin: adminStatus,
+      },
+    });
   };
 
   const DetailsBarAction = (actionName) => {
     if (actionName === "onSignOut") {
       handleSignOut();
-    } else if (actionName === "closingBar") {
-      handleClosingBar();
+    } else if (actionName === "handleMyOrder") {
+      handleMyOrder();
     } else if (actionName === "handleSettings") {
       handleSettings();
     }
@@ -109,7 +147,12 @@ const HomePage = () => {
       style={styles.itemMenuContainer}
       onPress={() => DetailsBarAction(item.action)}
     >
-      <MaterialIcons name={item.icon} size={40} color="black" />
+      {item.iconLib == "MaterialIcons" && (
+        <MaterialIcons name={item.icon} size={40} color="black" />
+      )}
+      {item.iconLib == "MaterialCommunityIcons" && (
+        <MaterialCommunityIcons name={item.icon} size={40} color="black" />
+      )}
       <Text style={styles.itemText}>{item.title}</Text>
     </TouchableOpacity>
   );
