@@ -63,45 +63,48 @@ const myOrders = () => {
   };
 
   const orderDataComponent = ({ item }) => (
-    <TouchableOpacity style={styles.orderList}>
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <View style={{ alignItems: "flex-start" }}>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.orderListHeader}>Date: </Text>
-            <Text style={styles.orderListText}>{item.date}</Text>
+    <View style={{ flex: 1 }}>
+      <TouchableOpacity style={styles.orderList}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <View style={{ alignItems: "flex-start" }}>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.orderListHeader}>Date: </Text>
+              <Text style={styles.orderListText}>{item.date}</Text>
+            </View>
+
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.orderListHeader}>{"Time: "}</Text>
+              {item.time.map((time, index) => (
+                <Text key={index} style={styles.orderListText}>
+                  {index > 0 && ", "}
+                  {time}
+                </Text>
+              ))}
+            </View>
+
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.orderListHeader}>Type: </Text>
+              <Text style={styles.orderListText}>{item.bookingType}</Text>
+            </View>
+
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.orderListHeader}>Sub Type: </Text>
+              <Text style={styles.orderListText}>{item.bookingSubType}</Text>
+            </View>
+
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.orderListHeader}>Your comment: </Text>
+              <Text style={styles.orderListText}>{item.comment}</Text>
+            </View>
           </View>
 
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.orderListHeader}>{"Time: "}</Text>
-            {item.time.map((time, index) => (
-              <Text key={index} style={styles.orderListText}>
-                {index > 0 && ", "}
-                {time}
-              </Text>
-            ))}
-          </View>
-
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.orderListHeader}>Type: </Text>
-            <Text style={styles.orderListText}>{item.bookingType}</Text>
-          </View>
-
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.orderListHeader}>Sub Type: </Text>
-            <Text style={styles.orderListText}>{item.bookingSubType}</Text>
-          </View>
-
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.orderListHeader}>Your comment: </Text>
-            <Text style={styles.orderListText}>{item.comment}</Text>
+          <View style={{ justifyContent: "center" }}>
+            <MaterialIcons name="bookmark-border" size={40} color="black" />
           </View>
         </View>
-
-        <View style={{ justifyContent: "center" }}>
-          <MaterialIcons name="bookmark-border" size={40} color="black" />
-        </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+      <Text></Text>
+    </View>
   );
   return (
     <View style={{ flex: 1 }}>
