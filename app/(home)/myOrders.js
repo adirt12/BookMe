@@ -9,7 +9,7 @@ import {
   FlatList,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useRouter, useNavigation, useLocalSearchParams } from "expo-router";
 import Constants from "expo-constants";
 import axios from "axios";
@@ -62,8 +62,50 @@ const myOrders = () => {
     });
   };
 
-  const orderDataComponent = ({ item }) => <Text>{item.date}</Text>;
+  const orderDataComponent = ({ item }) => (
+    <View style={{ flex: 1 }}>
+      <TouchableOpacity style={styles.orderList}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <View style={{ alignItems: "flex-start" }}>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.orderListHeader}>Date: </Text>
+              <Text style={styles.orderListText}>{item.date}</Text>
+            </View>
 
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.orderListHeader}>{"Time: "}</Text>
+              {item.time.map((time, index) => (
+                <Text key={index} style={styles.orderListText}>
+                  {index > 0 && ", "}
+                  {time}
+                </Text>
+              ))}
+            </View>
+
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.orderListHeader}>Type: </Text>
+              <Text style={styles.orderListText}>{item.bookingType}</Text>
+            </View>
+
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.orderListHeader}>Sub Type: </Text>
+              <Text style={styles.orderListText}>{item.bookingSubType}</Text>
+            </View>
+
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.orderListHeader}>Your comment: </Text>
+              <Text style={styles.orderListText}>{item.comment}</Text>
+            </View>
+          </View>
+
+          <View style={{ justifyContent: "center" }}>
+            <MaterialIcons name="bookmark-border" size={40} color="black" />
+          </View>
+        </View>
+      </TouchableOpacity>
+      <Text></Text>
+    </View>
+  );
   return (
     <View style={{ flex: 1 }}>
       <Modal
@@ -80,21 +122,26 @@ const myOrders = () => {
         </View>
       </Modal>
 
-      <View style={{ flexDirection: "row" }}>
-        <TouchableOpacity onPress={() => hendalReturnHome()}>
+      <View style={{ flexDirection: "row", marginBottom: 5 }}>
+        <TouchableOpacity
+          onPress={() => hendalReturnHome()}
+          style={{ paddingLeft: 10 }}
+        >
           <Ionicons name="home-outline" size={35} color="black" />
         </TouchableOpacity>
         <View style={{ flex: 1, alignItems: "center" }}>
-          <Text style={{ fontSize: 30 }}>{username}, Orders</Text>
+          <Text style={{ fontSize: 30 }}>Your Orders</Text>
         </View>
       </View>
 
-      <FlatList
-        data={orderData}
-        renderItem={orderDataComponent}
-        keyExtractor={(item) => item._id}
-        style={styles.flatList}
-      />
+      <View style={{ backgroundColor: "#74B2F3" }}>
+        <FlatList
+          data={orderData}
+          renderItem={orderDataComponent}
+          keyExtractor={(item) => item._id}
+          style={styles.flatList}
+        />
+      </View>
     </View>
   );
 };
@@ -119,5 +166,22 @@ const styles = StyleSheet.create({
   flatList: {
     marginTop: 8,
     padding: 16,
+    marginBottom: 50,
+  },
+  orderList: {
+    backgroundColor: "#fff",
+    padding: 16,
+    marginBottom: 12,
+    borderRadius: 8,
+    borderWidth: 2,
+  },
+  orderListText: {
+    fontSize: 22,
+  },
+  orderListHeader: {
+    textDecorationLine: "underline",
+    fontSize: 22,
+    fontStyle: "italic",
+    fontWeight: "bold",
   },
 });
