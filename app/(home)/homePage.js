@@ -15,6 +15,7 @@ import {
   AntDesign,
   MaterialIcons,
   MaterialCommunityIcons,
+  FontAwesome5 
 } from "@expo/vector-icons";
 import { useRouter, useNavigation, useLocalSearchParams } from "expo-router";
 import axios from "axios";
@@ -81,6 +82,13 @@ const HomePage = () => {
     },
     {
       id: "4",
+      title: "Booking Requests",
+      icon: "collections-bookmark",
+      action: "handleBookingRequests",
+      iconLib: "MaterialIcons",
+    },
+    {
+      id: "5",
       title: "Sign Out",
       icon: "exit-to-app",
       action: "onSignOut",
@@ -121,6 +129,18 @@ const HomePage = () => {
     alert("Feature in progress... :)");
   };
 
+  const handelBookingRequests = () => {
+    // Available for Aviran and such...
+    router.push({
+      pathname: "bookingRequests",
+      params: {
+        username: username.replace(/"/g, ""),
+        email: email.replace(/"/g, ""),
+        admin: adminStatus,
+      },
+    });
+  };
+
   const handleMyOrder = async () => {
     console.log("Entering my order");
     router.push({
@@ -148,6 +168,8 @@ const HomePage = () => {
       handleChangePassword();
     } else if (actionName === "handleSettings") {
       handleSettings();
+    }else if (actionName === "handleBookingRequests") {
+      handelBookingRequests();
     }
   };
 
