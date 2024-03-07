@@ -123,6 +123,7 @@ const HomePage = () => {
 
   const handleMyOrder = async () => {
     console.log("Entering my order");
+    setDetailsVisible(false);
     router.push({
       pathname: "myOrder",
       params: {

@@ -155,11 +155,10 @@ app.post("/myOrderList", async (req, res) => {
     const collection = db.collection("Booking");
     const email = req.body["email"];
     console.log(`email data : ${email}`);
-    const myOrder = await collection.find({ email: email }).toArray();
+    const myOrder = await collection.find({ email }).toArray();
 
-    // const myOrderList = myOrder.map
     console.log(myOrder);
-    res.json({ message: myOrder });
+    res.json(myOrder);
   } catch {
     res.json({ message: "Error!!" });
   }
