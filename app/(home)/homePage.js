@@ -124,19 +124,19 @@ const HomePage = () => {
   const handleMyOrder = async () => {
     console.log("Entering my order");
     router.push({
-      pathname: "myOrders",
+      pathname: "myOrder",
       params: {
         username: username.replace(/"/g, ""),
         email: email.replace(/"/g, ""),
         admin: adminStatus,
       },
     });
+    setDetailsVisible(false);
   };
 
   const handleChangePassword = () => {
     setDetailsVisible(false);
-    router.push('/(home)/changePassword')
-
+    router.push("/(home)/changePassword");
   };
 
   const DetailsBarAction = (actionName) => {
@@ -317,6 +317,5 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
 });
-
 
 export default HomePage;
