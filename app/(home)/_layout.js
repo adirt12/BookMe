@@ -10,8 +10,8 @@ export default function Layout() {
       <Stack.Screen name="signUpForm" />
       <Stack.Screen name="selectionPage" />
       <Stack.Screen name="bookingPage" />
-      <Stack.Screen name="myOrders" />
-      <Stack.Screen name="changePassword"/>
+      <Stack.Screen name="myOrder" />
+      <Stack.Screen name="changePassword" />
     </Stack>
   );
 }

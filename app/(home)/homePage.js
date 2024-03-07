@@ -125,13 +125,14 @@ const HomePage = () => {
     console.log("Entering my order");
     setDetailsVisible(false);
     router.push({
-      pathname: "myOrders",
+      pathname: "myOrder",
       params: {
         username: username.replace(/"/g, ""),
         email: email.replace(/"/g, ""),
         admin: adminStatus,
       },
     });
+    setDetailsVisible(false);
   };
 
   const handleChangePassword = () => {

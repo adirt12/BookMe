@@ -7,14 +7,15 @@ import {
   Image,
   Dimensions,
   FlatList,
+  Pressable,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { useRouter, useNavigation, useLocalSearchParams } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import Constants from "expo-constants";
 import axios from "axios";
 
-const myOrders = () => {
+const myOrder = () => {
   const router = useRouter();
   const { username } = useLocalSearchParams();
   const { email } = useLocalSearchParams();
@@ -38,8 +39,7 @@ const myOrders = () => {
         await axios
           .post("http://" + ipAddress + ":8000/myOrderList", myOrder)
           .then((response) => {
-            // const res = JSON.stringify(response.data.message);
-            const res = response.data;
+            const res = response.data.message;
             setOrderData(res);
           });
       } catch (error) {
@@ -62,50 +62,46 @@ const myOrders = () => {
     });
   };
 
-  const orderDataComponent = ({ item }) => (
-    <View style={{ flex: 1 }}>
-      <TouchableOpacity style={styles.orderList}>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <View style={{ alignItems: "flex-start" }}>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={styles.orderListHeader}>Date: </Text>
-              <Text style={styles.orderListText}>{item.date}</Text>
-            </View>
+  const orderDataComponent = ({ item }) => {
+    console.log(item.time);
+    console.log(item._id);
+    const id = item._id;
+    return (
+      <View>
+        <TouchableOpacity style={styles.orderList}>
+          <Text style={{ fontSize: 16 }}>
+            <Text style={styles.orderListHeader}>Time: </Text>
+            {item.time.map((time, index) => (
+              <Text
+                key={index}
+                style={[styles.orderListText, { flexWrap: "wrap" }]}
+              >
+                {index > 0 && ", "}
+                {time}
+              </Text>
+            ))}
+          </Text>
 
-            <View style={{ flexDirection: "row" }}>
-              <Text style={styles.orderListHeader}>{"Time: "}</Text>
-              {item.time.map((time, index) => (
-                <Text key={index} style={styles.orderListText}>
-                  {index > 0 && ", "}
-                  {time}
-                </Text>
-              ))}
-            </View>
+          <Text style={{ fontSize: 16 }}>
+            <Text style={styles.orderListHeader}>Date: </Text>
+            <Text style={[styles.orderListText, { flexWrap: "wrap" }]}>
+              {item.date}
+            </Text>
+          </Text>
 
-            <View style={{ flexDirection: "row" }}>
-              <Text style={styles.orderListHeader}>Type: </Text>
-              <Text style={styles.orderListText}>{item.bookingType}</Text>
-            </View>
+          <Text style={{ fontSize: 16 }}>
+            <Text style={styles.orderListHeader}>Type: </Text>
+            <Text style={[styles.orderListText, { flexWrap: "wrap" }]}>
+              {item.bookingType}, {item.bookingSubType}
+            </Text>
+          </Text>
+        </TouchableOpacity>
+        <Text></Text>
+        <Text></Text>
+      </View>
+    );
+  };
 
-            <View style={{ flexDirection: "row" }}>
-              <Text style={styles.orderListHeader}>Sub Type: </Text>
-              <Text style={styles.orderListText}>{item.bookingSubType}</Text>
-            </View>
-
-            <View style={{ flexDirection: "row" }}>
-              <Text style={styles.orderListHeader}>Your comment: </Text>
-              <Text style={styles.orderListText}>{item.comment}</Text>
-            </View>
-          </View>
-
-          <View style={{ justifyContent: "center" }}>
-            <MaterialIcons name="bookmark-border" size={40} color="black" />
-          </View>
-        </View>
-      </TouchableOpacity>
-      <Text></Text>
-    </View>
-  );
   return (
     <View style={{ flex: 1 }}>
       <Modal
@@ -146,7 +142,7 @@ const myOrders = () => {
   );
 };
 
-export default myOrders;
+export default myOrder;
 
 const styles = StyleSheet.create({
   modalContainer: {
@@ -169,14 +165,13 @@ const styles = StyleSheet.create({
     marginBottom: 50,
   },
   orderList: {
-    backgroundColor: "#fff",
-    padding: 16,
-    marginBottom: 12,
+    padding: 3,
     borderRadius: 8,
     borderWidth: 2,
   },
   orderListText: {
     fontSize: 22,
+    flexWrap: "wrap",
   },
   orderListHeader: {
     textDecorationLine: "underline",
